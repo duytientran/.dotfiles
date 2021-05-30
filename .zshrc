@@ -10,6 +10,3 @@ if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
 fi
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-# laskdfl jasl;kdf l;akjsldfkj l;aksjdf lkjas;lkdjf
-# lasdjfl;ajsf;kalwejfl;akjwef
-# laskdjflajwelfjlawkejf;l
