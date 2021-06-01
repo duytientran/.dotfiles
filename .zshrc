@@ -226,7 +226,6 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 
 # Use ~~ as the trigger sequence instead of the default **
 export FZF_COMPLETION_TRIGGER="'"
-
 # Options to fzf command
 export FZF_COMPLETION_OPTS='--border --info=inline'
 # export FZF_DEFAULT_OPTS=' --no-height --no-reverse --ansi'
@@ -258,3 +257,6 @@ _fzf_comprun() {
     *)            fzf "$@" ;;
   esac
 }
+
+source ~/.zinit/bin/zinit.zsh
+zinit light Aloxaf/fzf-tab
