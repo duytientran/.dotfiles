@@ -346,13 +346,12 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'joshdick/onedark.vim'
 Plug 'blindFS/vim-taskwarrior'
 Plug 'prettier/vim-prettier', {'do': 'yarn install'}
-Plug 'mcchrish/nnn.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-commentary'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'mzlogin/vim-markdown-toc'
-Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline'
 Plug 'frazrepo/vim-rainbow'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
@@ -401,13 +400,13 @@ call plug#end()
 
 "{{{ NNN Plugin
 
-" let g:nnn#set_default_mappings = 0 " Disable default mappings
-" " Start nnn in the current file's directory
+let g:nnn#set_default_mappings = 0 " Disable default mappings
+" Start nnn in the current file's directory
 " nnoremap <leader>nn :NnnPicker '%:p:h'<CR>
-" " Opens the nnn window in a split
-" let g:nnn#layout = 'vnew' " or vnew, tabnew etc.
-" " Or pass a dictionary with window size
-" let g:nnn#layout = { 'right': '~30%' } " or right, up, down
+" Opens the nnn window in a split
+let g:nnn#layout = 'vnew' " or vnew, tabnew etc.
+" Or pass a dictionary with window size
+let g:nnn#layout = { 'right': '~30%' } " or right, up, down
 " Floating window (neovim latest and vim with patch 8.2.191)
 "let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
 "}}}
