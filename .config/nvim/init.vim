@@ -70,10 +70,10 @@ set title                      "Set the window’s title, reflecting the file cu
 
 "{{{ Swap and backup file options
 "set noswapfile
-set directory=$HOME/.config/nvim/swp//
-set nobackup
-set nowritebackup
-set nowb
+" set directory=$HOME/.config/nvim/swp//
+" set nobackup
+" set nowritebackup
+" set nowb
 "}}}
 
 "{{{Indentation configuration
@@ -336,23 +336,20 @@ Plug 'tpope/vim-repeat' " Work with vim-surround plugin. Just need to press . it
 Plug 'tpope/vim-surround' " Surround with brackets,...
 Plug 'kreskij/Repeatable.vim', { 'on': 'Repeatable' } " Put Repeatable before mapping to make it repeatable.
 Plug 'sedm0784/vim-you-autocorrect' " Autocorrect words as we type, it would make English better.
-Plug 'ron89/thesaurus_query.vim'
-Plug 'xavierchow/vim-sequence-diagram'
+Plug 'ron89/thesaurus_query.vim' " Thesaurus dictionary for vim
 " Plug 'jalvesaq/zotcite'
-Plug 'romainl/vim-qf'
-Plug 'vim-scripts/Rename2'
-Plug 'mbbill/undotree'
-Plug 'arthurxavierx/vim-caser'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'joshdick/onedark.vim'
-Plug 'blindFS/vim-taskwarrior'
-Plug 'prettier/vim-prettier', {'do': 'yarn install'}
+Plug 'romainl/vim-qf' " Quickfix window control
+Plug 'vim-scripts/Rename2' " Rename the file
+Plug 'mbbill/undotree' "Undotree
+Plug 'arthurxavierx/vim-caser' " Change case for words
+" Plug 'christoomey/vim-tmux-navigator'
+Plug 'joshdick/onedark.vim' " Theme for vim
+" Plug 'vim-airline/vim-airline' " Status line for vim
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'prettier/vim-prettier', {'do': 'yarn install'} " Make format prettier
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-commentary'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-Plug 'mzlogin/vim-markdown-toc'
-" Plug 'vim-airline/vim-airline'
+Plug 'tpope/vim-commentary' " Comment vim
 Plug 'frazrepo/vim-rainbow'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mhinz/vim-startify'
@@ -363,12 +360,11 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
 Plug 'numshub/vim-mapping-conflicts'
 Plug 'easymotion/vim-easymotion'
+Plug 'haya14busa/vim-easyoperator-phrase'
+Plug 'haya14busa/vim-easyoperator-line'
 " Plug 'tomasiser/vim-code-dark'
 " Plug 'rderik/vim-markdown-toc', { 'branch': 'add-anchors-to-headings/drc2r' }
 " Plug 'vim-airline/vim-airline-themes'
-"Plug 'haya14busa/incsearch.vim'
-" Plug 'godlygeek/tabular'
-" Plug 'tools-life/taskwiki'
 "-----------Git----------
 "Plug 'airblade/vim-gitgutter'
 "Plug 'mhinz/vim-signify'
@@ -376,25 +372,24 @@ Plug 'easymotion/vim-easymotion'
 "Plug 'tpope/vim-rhubarb'
 "Plug 'junegunn/gv.vim'
 "---------------------------
-Plug 'dhruvasagar/vim-table-mode'
+Plug 'dhruvasagar/vim-table-mode' " For creating tables
 Plug 'plasticboy/vim-markdown'
+Plug 'mzlogin/vim-markdown-toc'
 Plug 'vimwiki/vimwiki', {'branch': 'dev'}
 Plug 'mattn/calendar-vim'
+" Plug 'michal-h21/vim-zettel'
 Plug 'majutsushi/tagbar'
 "--------Language packs------
 "Plug 'elzr/vim-json'
-Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
-Plug 'haya14busa/vim-easyoperator-line'
-Plug 'haya14busa/vim-easyoperator-phrase'
+" Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
 "--------------------------------
 Plug 'dkarter/bullets.vim'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'gioele/vim-autoswap'
-Plug 'matze/vim-move'
-" Plug 'michal-h21/vim-zettel'
-Plug 'junegunn/vim-easy-align'
+Plug 'matze/vim-move' " For moving text
 Plug 'dpelle/vim-LanguageTool'
-Plug 'kshenoy/vim-signature'
+Plug 'kshenoy/vim-signature'  " Marking the file and move to marks
+Plug 'gioele/vim-autoswap' " For controlling swapfile
+Plug 'junegunn/vim-easy-align'
 Plug 'jremmen/vim-ripgrep'
 Plug 'stefandtw/quickfix-reflector.vim'
 call plug#end()

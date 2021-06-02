@@ -11,6 +11,15 @@ fi
 
 #Alias for dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+## Alias section
+alias cp="cp -i"                                                # Confirm before overwriting something
+alias df='df -h'                                                # Human-readable sizes
+alias free='free -m'                                            # Show sizes in MB
+alias gitu='git add . && git commit && git push'
+## Alias for fasd plugin
+alias v='f -e nvim'   # quick opening files with vim
+alias p='f .pdf -e evince' # quick opening files pdf with evince
+
 
 
 export EDITOR=nvim
@@ -70,11 +79,6 @@ bindkey '^[[1;5C' forward-word                                  #
 # bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
 bindkey '^[[Z' undo                                             # Shift+tab undo last action
 
-## Alias section
-alias cp="cp -i"                                                # Confirm before overwriting something
-alias df='df -h'                                                # Human-readable sizes
-alias free='free -m'                                            # Show sizes in MB
-alias gitu='git add . && git commit && git push'
 
 # Theming section
 autoload -U compinit colors zcalc
@@ -259,6 +263,8 @@ _fzf_comprun() {
 }
 
 source ~/.zinit/bin/zinit.zsh
+eval "$(fasd --init auto)"
 zinit light Aloxaf/fzf-tab
 zinit light zpm-zsh/ls
 zinit light hlissner/zsh-autopair
+zinit light wookayin/fzf-fasd
