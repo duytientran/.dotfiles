@@ -332,9 +332,10 @@ inoremap <expr> <c-y> pumvisible() ? "\<c-y>" : matchstr(getline(line('.')-1), '
 "{{{ Vim plugin list
 call plug#begin()
 " Plug 'masukomi/vim-markdown-folding'
-Plug 'tpope/vim-repeat'
-Plug 'kreskij/Repeatable.vim', { 'on': 'Repeatable' }
-Plug 'sedm0784/vim-you-autocorrect'
+Plug 'tpope/vim-repeat' " Work with vim-surround plugin. Just need to press . it will repeat the last action
+Plug 'tpope/vim-surround' " Surround with brackets,...
+Plug 'kreskij/Repeatable.vim', { 'on': 'Repeatable' } " Put Repeatable before mapping to make it repeatable.
+Plug 'sedm0784/vim-you-autocorrect' " Autocorrect words as we type, it would make English better.
 Plug 'ron89/thesaurus_query.vim'
 Plug 'xavierchow/vim-sequence-diagram'
 " Plug 'jalvesaq/zotcite'
@@ -354,7 +355,6 @@ Plug 'mzlogin/vim-markdown-toc'
 " Plug 'vim-airline/vim-airline'
 Plug 'frazrepo/vim-rainbow'
 Plug 'jiangmiao/auto-pairs'
-Plug 'tpope/vim-surround'
 Plug 'mhinz/vim-startify'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/vim-peekaboo'
@@ -395,6 +395,8 @@ Plug 'matze/vim-move'
 Plug 'junegunn/vim-easy-align'
 Plug 'dpelle/vim-LanguageTool'
 Plug 'kshenoy/vim-signature'
+Plug 'jremmen/vim-ripgrep'
+Plug 'stefandtw/quickfix-reflector.vim'
 call plug#end()
 "}}}
 
@@ -876,7 +878,7 @@ let g:qf_mapping_ack_style = 1
 " let g:qf_max_height = 12
 "}}}
 
-"{{{ Therasus Plugin
+"{{{ Thesaurus Plugin
 nnoremap <Leader>sn  :ThesaurusQueryReplaceCurrentWord<CR>
 vnoremap <Leader>sn  y:ThesaurusQueryReplace <C-r>"<CR>
 "}}}
@@ -943,4 +945,10 @@ nnoremap <silent> <Leader>ad :DisableAutocorrect <CR>
 "{{{ Move up and down navigation
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+"}}}
+
+"{{{ vim-ripgrep plugin
+"Set smartcase search for ripgrep
+let g:rg_command = 'rg --vimgrep -S'
+let g:rg_highlight = 'True'
 "}}}
