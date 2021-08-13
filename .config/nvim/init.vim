@@ -109,7 +109,7 @@ set confirm                      "Display a confirmation dialog when closing an 
 "}}}
 
 "{{{Vim vanilla undo configuration
-set undofile " Maintain undo history between sessions
+" set undofile " Maintain undo history between sessions
 set undodir=~/.config/nvim/undodir
 "}}}
 
@@ -392,7 +392,28 @@ Plug 'gioele/vim-autoswap' " For controlling swapfile
 Plug 'junegunn/vim-easy-align'
 Plug 'jremmen/vim-ripgrep'
 Plug 'stefandtw/quickfix-reflector.vim'
+Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
+Plug 'roosta/fzfolds.vim'
+" Plug 'nvim-lua/plenary.nvim'
+" Plug 'nvim-lua/popup.nvim'
+" Plug 'windwp/nvim-spectre'
+" Plug 'kyazdani42/nvim-web-devicons'
 call plug#end()
+"}}}
+
+"{{{ Fzf folds Plugin
+nnoremap <leader>jf :Folds<CR>
+let g:fzfolds_open = 1
+"}}}
+
+"{{{ Spectre plugin
+"nnoremap <leader>S :lua require('spectre').open()<CR>
+
+"search current word
+"nnoremap <leader>sw :lua require('spectre').open_visual({select_word=true})<CR>
+"vnoremap <leader>s :lua require('spectre').open_visual()<CR>
+"Search in current file
+"nnoremap <leader>sp viw:lua require('spectre').open_file_search()<cr>
 "}}}
 
 "{{{ NNN Plugin
