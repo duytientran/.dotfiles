@@ -10,6 +10,7 @@ if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
 fi
 
 #Alias for dotfiles management
+alias r='ranger'
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 ## Alias section
 alias cp="cp -i"                                                # Confirm before overwriting something
