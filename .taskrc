@@ -1,0 +1,200 @@
+# [Created by task 2.5.1 8/3/2020 15:11:52]
+# Taskwarrior program configuration file.
+# For more documentation, see http://taskwarrior.org or try 'man task', 'man task-color',
+# 'man task-sync' or 'man taskrc'
+
+# Here is an example of entries that use the default, override and blank values
+#   variable=foo   -- By specifying a value, this overrides the default
+#   variable=      -- By specifying no value, this means no default
+#   #variable=foo  -- By commenting out the line, or deleting it, this uses the default
+
+# Use the command 'task show' to see all defaults and overrides
+
+# Files
+data.location=~/MEGA/project_tientran/.task
+# Inthe.am configurations
+taskd.certificate=~/.task/private.certificate.pem
+taskd.key=~/.task/private.key.pem
+taskd.ca=~/.task/ca.cert.pem
+taskd.server=taskwarrior.inthe.am:53589
+taskd.credentials=inthe_am/duytien.tran89/3e956dea-082f-4d04-986d-541ed92549fa
+taskd.trust=ignore hostname
+# Color theme (uncomment one to use)
+#include /usr/share/doc/task/rc/light-16.theme
+#include /usr/share/doc/task/rc/light-256.theme
+#include /usr/share/doc/task/rc/dark-16.theme
+include /usr/share/doc/task/rc/dark-256.theme
+#include /usr/share/doc/task/rc/dark-red-256.theme
+#include /usr/share/doc/task/rc/dark-green-256.theme
+#include /usr/share/doc/task/rc/dark-blue-256.theme
+#include /usr/share/doc/task/rc/dark-violets-256.theme
+#include /usr/share/doc/task/rc/dark-yellow-green.theme
+#include /usr/share/doc/task/rc/dark-gray-256.theme
+#include /usr/share/doc/task/rc/dark-gray-blue-256.theme
+#include /usr/share/doc/task/rc/solarized-dark-256.theme
+#include /usr/share/doc/task/rc/solarized-light-256.theme
+#include /usr/share/doc/task/rc/no-color.theme
+
+#{{{ In the AM settings
+
+#uda.intheamattachments.type=string
+#uda.intheamattachments.label=Inthe.AM Attachments
+#uda.intheamoriginalemailsubject.type=string
+#uda.intheamoriginalemailsubject.label=Inthe.AM E-mail Subject
+#uda.intheamoriginalemailid.type=numeric
+#uda.intheamoriginalemailid.label=Inthe.AM E-mail ID
+#uda.intheamtrelloid.type=string
+#uda.intheamtrelloid.label=Inthe.AM Trello Object ID
+#uda.intheamtrelloboardid.type=string
+#uda.intheamtrelloboardid.label=Inthe.AM Trello Board ID
+#uda.intheamtrellolistid.type=string
+#uda.intheamtrellolistid.label=Inthe.AM Trello List ID
+#uda.intheamtrellolistname.type=string
+#uda.intheamtrellolistname.label=Inthe.AM Trello List Name
+#uda.intheamtrellourl.type=string
+#uda.intheamtrellourl.label=Inthe.AM Trello URL
+#uda.intheamtrellodescription.type=string
+#uda.intheamtrellodescription.label=Inthe.AM Trello Description
+#uda.intheamtrellolastupdated.type=string
+#uda.intheamtrellolastupdated.label=Inthe.AM Trello Last Updated
+#uda.intheamduplicateof.type=string
+#uda.intheamduplicateof.label=Inthe.AM Duplicate of Task
+#uda.intheammergedfrom.type=string
+#uda.intheammergedfrom.label=Inthe.AM Duplicate Tasks Merged
+#}}}
+#Hook Total active time configuration
+uda.totalactivetime.type=duration
+uda.totalactivetime.label=Total active time
+uda.totalactivetime.values= #
+#Report
+
+report.d.sort=due+,urgency-,scheduled+
+report.d.filter=(status:pending)
+report.d.labels=ID,Sta,Age,Act,Dep,Pri,Rec,Proj,Est,Due,ReDue,In,Sch,ReSch,Until,Stage,Tags,Desc,Urg
+report.d.columns=id,status.short,entry.age,start.age,depends,priority,recur,project,estimate,due,due.relative,totalactivetime,scheduled,scheduled.relative,until,stage,tags,description.count,urgency
+
+report.s.description=Most scheduled tasks
+report.s.sort=scheduled+/,urgency-
+report.s.filter=(status:pending)
+report.s.labels=ID,Sta,Age,Act,Dep,Pri,Rec,Proj,Est,Due,ReDue,In,Sch,ReSch,Until,Stage,Tags,Desc,Urg
+report.s.columns=id,status.short,entry.age,start.age,depends,priority,recur,project,estimate,due,due.relative,totalactivetime,scheduled,scheduled.relative,until,stage,tags,description.count,urgency
+
+
+report.next.columns=id,status.short,start.active,entry.age,depends,priority,recur,project,estimate,due,due.relative,totalactivetime,wait,wait.relative,scheduled,scheduled.relative,until,stage,tags,description.count,urgency
+report.next.labels=ID,Sta,A,Age,D,P,R,Project,Est,Due,ReDue,In,Wait,ReWait,Sch,ReSche,Until,Stage,Tags,Description,Urg
+report.next.description=Most urgent tasks
+report.next.filter=(status:pending)
+report.next.sort=urgency-
+
+report.waiting.columns=id,status.short,start.active,entry.age,depends,priority,recur,project,estimate,due,due.relative,totalactivetime,wait,wait.relative,scheduled,scheduled.relative,until,stage,tags,description.count,urgency
+report.waiting.labels=ID,Sta,A,Age,D,P,R,Project,Est,Due,ReDue,In,Wait,ReWait,Sch,ReSche,Until,Stage,Tags,Description,Urg
+report.waiting.description=Waiting (hidden) tasks
+report.waiting.filter=+WAITING
+report.waiting.sort=due+,wait+,entry+
+urgency.waiting.coefficient=-3.0
+
+report.oldest.columns=id,start.age,entry,entry.age,modified.age,depends.indicator,priority,project,recur.indicator,wait.remaining,scheduled.countdown,due,until.age,stage,tags,description.count,urgency
+report.oldest.description=Oldest tasks
+report.oldest.filter=status:pending or status:waiting
+report.oldest.labels=ID,Active,Created,Age,Mod,D,P,Project,R,Wait,Sch,Due,Until,Stage,Tags,Description,Urg
+report.oldest.sort=entry+
+
+report.newest.columns=id,start.age,entry,entry.age,modified.age,depends.indicator,priority,project,stage,tags,recur.indicator,wait.remaining,scheduled.countdown,due,until.age,description.count
+report.newest.description=Newest tasks
+report.newest.filter=status:pending or status:waiting
+report.newest.labels=ID,Active,Created,Age,Mod,D,P,Project,Stage,Tags,R,Wait,Sch,Due,Until,Description
+report.newest.sort=entry-
+
+report.blocked.columns=id,depends,entry.age,project,priority,estimate,due,start.active,due.relative,scheduled,stage,tags,description.count,urgency
+report.blocked.description=Blocked tasks
+report.blocked.filter=status:pending +BLOCKED
+report.blocked.labels=ID,Deps,Age,Proj,Pri,Est,Due,Active,ReDue,Sched,Stage,Tags,Description,Urg
+report.blocked.sort=due+,urgency-,start-,project+
+
+report.blocking.columns=id,start.active,depends,project,stage,tags,recur,wait,scheduled.remaining,due.relative,until.remaining,description.count,urgency
+report.blocking.description=Blocking tasks
+report.blocking.filter=status:pending +BLOCKING
+report.blocking.labels=ID,A,Deps,Project,Stage,Tags,R,W,Sch,Due,Until,Description,Urg
+report.blocking.sort=urgency-,due+,entry+
+
+
+report.completed.columns=uuid.short,entry,end,entry.age,depends,priority,project,stage,tags,recur.indicator,due,description.count
+report.completed.description=Completed tasks
+report.completed.filter=status:completed
+report.completed.labels=UUID,Created,Completed,Age,Deps,P,Project,Stage,Tags,R,Due,Description
+report.completed.sort=end-
+
+report.deleted.columns=uuid.short,entry,end,entry.age,depends,priority,project,stage,tags,recur.indicator,due,description.count
+report.deleted.description=Completed tasks
+report.deleted.filter=+DELETED
+report.deleted.labels=UUID,Created,Completed,Age,Deps,P,Project,Stage,Tags,R,Due,Description
+report.deleted.sort=end-
+
+
+report.i.columns=id,status.short,start.active,entry.age,depends,priority,recur,project,estimate,due,due.relative,totalactivetime,wait,wait.relative,scheduled,scheduled.relative,until,stage,tags,description.count,urgency
+report.i.labels=ID,Sta,A,Age,D,P,R,Project,Est,Due,ReDue,In,Wait,ReWait,Sch,ReSche,Until,Stage,Tags,Description,Urg
+report.i.description= Inbox tasks
+report.i.filter=+inbox and status:pending
+report.i.sort=estimate+,urgency-,priority-
+#Custom context
+context.health=+consultation or +excercise or +medicare
+context.home=+home
+context.learning=+vim or +docker or +r or +python or +experience or +programming
+context.work=+meeting or +presentation or +equipment or +laser or +chemical or +lab or +office or +work or +swinburne
+context.finance=+saving or +spend or +purchase or +invest or +rent
+context.travel=+visa or +hotel
+context.swinburne=+meeting or +office or +laboratory or +work
+context.shopping=+woolworths or +coles or +bigw or +kmart or +jbhifi or +centrecom or +ikea or +shopping
+context.vietnam=+hue or +saigon
+context.australia=+melbourne or +cbd or +east or +west or +north or +south or +sydney or +canberra or +perth
+context.daypart=+morning or +afternoon or +evening
+context.calendar=+apt
+context.weekday= +monday or +tuesday or +wednesday or +thursday or +friday
+context.weekend=+saturday or +sunday
+context.family=+tien or +thao or +em or +mom or +papa or +baby
+context.colleague=+arpana or +ali or +peter or +andrei or +russell
+context.friends=+thong or +akhuong or +akhoa
+context.study=+school or +homework or +lab
+context.stage=+track or +review or +wip or +respond
+#context.joy=+
+#context.home=+
+#context.sparetime=+0.5h +1h
+#context.holliday=+
+#context.vacation=+
+#context.morning=+
+#context.afternoon=+
+#context.night=+
+#context.personal=+
+#context.social=+
+ # Tag list
+ #Tags: consultation excercise vim docker r python experience meeting presentation equipment laser saving spend purchase invest rent visa medicare woolworths coles bigw kmart jbhifi centrecom ikea lab office hue saigon melbourne cbd east west north south  satuday sunday monday tuesday wednesday thursday friday thismonth thisweek thisyear morning afternoon night tien thao em mom papa arpana ali peter andrei akhuong akhoa thong
+uda.priority.values=U,H,M, ,L
+urgency.uda.priority.U.coefficient=8.1
+#color.uda.priority.U=inverse red
+#color.uda.priority.H=red
+#color.uda.priority.M=magenta
+#color.uda.priority.L=cyan
+color.tagged=
+#priority.user.tag.meeting.value=H
+#priority.user.tag.appointment.value=H
+#urgency.uda.tags.inbox.coefficient=-10
+#color.tag.next=
+#color.tag.appointment=inverse green
+#color.tag.meeting=inverse green
+#color.deleted=magenta
+#color.deleted=magenta
+#Basic configurations
+weekstart=monday
+search.case.sensitive=no
+list.all.projects=yes
+# Child tasks inherit their parent's urgency if that's higher.
+# It's like this option was made for me.
+urgency.inherit=on
+urgency.blocking.coefficient=0
+urgency.blocked.coefficient=0
+uda.stage.type=string
+uda.stage.label=Est
+uda.stage.value=begin,track,wip,review,final
+uda.estimate.type=duration
+uda.estimate.label=Est
+verbose=context,filter,blank,header,footnote,label,new-id,new-uuid,affected,edit,special,project,sync,unwait,recur

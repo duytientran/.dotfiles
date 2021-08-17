@@ -22,7 +22,6 @@ alias v='f -e nvim'   # quick opening files with vim
 alias p='f .pdf -e evince' # quick opening files pdf with evince
 
 
-
 export EDITOR=nvim
 
 ## Options section
