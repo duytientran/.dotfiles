@@ -147,7 +147,7 @@ let xml_syntax_folding=1
 "}}}
 
 "{{{Vim template loading
-:autocmd BufNewFile *.html 0r ~/.vim/templates/html.tpl
+:autocmd BufNewFile *.html 1r ~/.vim/templates/html.tpl
 "}}}
 
 "{{{Vim buffer mapping
@@ -344,7 +344,7 @@ Plug 'mbbill/undotree' "Undotree
 Plug 'arthurxavierx/vim-caser' " Change case for words
 " Plug 'christoomey/vim-tmux-navigator'
 Plug 'joshdick/onedark.vim' " Theme for vim
-" Plug 'vim-airline/vim-airline' " Status line for vim
+Plug 'vim-airline/vim-airline' " Status line for vim
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'prettier/vim-prettier', {'do': 'yarn install'} " Make format prettier
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -358,7 +358,7 @@ Plug 'junegunn/vim-peekaboo'
 " Plug 'SirVer/ultisnips'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
-Plug 'numshub/vim-mapping-conflicts'
+" Plug 'numshub/vim-mapping-conflicts'
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/vim-easyoperator-phrase'
 Plug 'haya14busa/vim-easyoperator-line'
@@ -378,22 +378,22 @@ Plug 'mzlogin/vim-markdown-toc'
 Plug 'vimwiki/vimwiki', {'branch': 'dev'}
 Plug 'mattn/calendar-vim'
 " Plug 'michal-h21/vim-zettel'
-Plug 'majutsushi/tagbar'
+" Plug 'majutsushi/tagbar'
 "--------Language packs------
 "Plug 'elzr/vim-json'
 " Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
 "--------------------------------
-Plug 'dkarter/bullets.vim'
-Plug 'ntpeters/vim-better-whitespace'
+Plug 'dkarter/bullets.vim' " For using bullets, number indents
+Plug 'ntpeters/vim-better-whitespace' " For controlling whitespace
 Plug 'matze/vim-move' " For moving text
-Plug 'dpelle/vim-LanguageTool'
+Plug 'dpelle/vim-LanguageTool' " Checking gramar and vocabulary
 Plug 'kshenoy/vim-signature'  " Marking the file and move to marks
-Plug 'gioele/vim-autoswap' " For controlling swapfile
-Plug 'junegunn/vim-easy-align'
-Plug 'jremmen/vim-ripgrep'
+Plug 'chrisbra/Recover.vim' " For controlling swapfile
+Plug 'junegunn/vim-easy-align' " Aligning texts
+Plug 'jremmen/vim-ripgrep' " Ripgrep for vim
 Plug 'stefandtw/quickfix-reflector.vim'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
-Plug 'roosta/fzfolds.vim'
+Plug 'roosta/fzfolds.vim' " Fzf for folds
 " Plug 'nvim-lua/plenary.nvim'
 " Plug 'nvim-lua/popup.nvim'
 " Plug 'windwp/nvim-spectre'
@@ -701,7 +701,6 @@ endfunction
 "{{{ Vim Easy Align Plugin
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
-
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 "}}}
