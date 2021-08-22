@@ -42,6 +42,7 @@ set cursorline                          " Enable highlighting of the current lin
 set cmdheight=2
 set lazyredraw "setting for macro
 set title titlestring=
+set isfname-== "When using commands like Ctrl-x Ctrl-f for filename completion, do not read equal signs as part of file names, a common nuisance when working with shell scripts
 " Display extra whitespace
  " set list listchars=tab:>·,trail:·,nbsp:·
 " Spelling check for Filetype
@@ -114,11 +115,22 @@ set undodir=~/.config/nvim/undodir
 "}}}
 
 "{{{ Vim vanilla windows navigation configuration
-" nnoremap <C-H> <C-W><C-H>
-" nnoremap <C-J> <C-W><C-J>
-" nnoremap <C-K> <C-W><C-K>
-" nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
 "}}}
+
+"{{{ Movement
+"Bring next or previous search results to midscreen
+nnoremap <expr> n  'Nn'[v:searchforward]
+xnoremap <expr> n  'Nn'[v:searchforward]
+onoremap <expr> n  'Nn'[v:searchforward]
+nnoremap <expr> N  'nN'[v:searchforward]
+xnoremap <expr> N  'nN'[v:searchforward]
+onoremap <expr> N  'nN'[v:searchforward]
+"}}}
+
 
 "{{{Vim visual mode mapping
 vnoremap . :normal.<CR> " Dot command
@@ -152,14 +164,14 @@ let xml_syntax_folding=1
 
 "{{{Vim buffer mapping
 
-noremap <leader>db :bd<CR>      " Close the buffer.
+noremap <leader>bd :bd<CR>      " Close the buffer.
 " noremap <C-S-K> :bn<CR>          " Next buffer.
 noremap <S-L> :bn<CR>          " Next buffer.
 noremap <S-H> :bp<CR>          " Next buffer.
 " noremap <leader>nb :bn<CR>          " Next buffer.
 " noremap <leader>pb :bp<CR>          " Previous buffer.
 " noremap <C-S-J> :bp<CR>          " Previous buffer.
-noremap <leader>bb :b#<CR>          " Toggle to most recently used buffer.
+noremap <leader><leader> :b#<CR>          " Toggle to most recently used buffer.
 "}}}
 
 "{{{ Others
@@ -331,7 +343,6 @@ inoremap <expr> <c-y> pumvisible() ? "\<c-y>" : matchstr(getline(line('.')-1), '
 
 "{{{ Vim plugin list
 call plug#begin()
-" Plug 'masukomi/vim-markdown-folding'
 Plug 'tpope/vim-repeat' " Work with vim-surround plugin. Just need to press . it will repeat the last action
 Plug 'tpope/vim-surround' " Surround with brackets,...
 Plug 'kreskij/Repeatable.vim', { 'on': 'Repeatable' } " Put Repeatable before mapping to make it repeatable.
@@ -342,7 +353,6 @@ Plug 'romainl/vim-qf' " Quickfix window control
 Plug 'vim-scripts/Rename2' " Rename the file
 Plug 'mbbill/undotree' "Undotree
 Plug 'arthurxavierx/vim-caser' " Change case for words
-" Plug 'christoomey/vim-tmux-navigator'
 Plug 'joshdick/onedark.vim' " Theme for vim
 Plug 'vim-airline/vim-airline' " Status line for vim
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
@@ -358,7 +368,6 @@ Plug 'junegunn/vim-peekaboo'
 " Plug 'SirVer/ultisnips'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
-" Plug 'numshub/vim-mapping-conflicts'
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/vim-easyoperator-phrase'
 Plug 'haya14busa/vim-easyoperator-line'
@@ -377,8 +386,9 @@ Plug 'plasticboy/vim-markdown'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'vimwiki/vimwiki', {'branch': 'dev'}
 Plug 'mattn/calendar-vim'
+" Plug 'masukomi/vim-markdown-folding'
 " Plug 'michal-h21/vim-zettel'
-" Plug 'majutsushi/tagbar'
+Plug 'preservim/tagbar'
 "--------Language packs------
 "Plug 'elzr/vim-json'
 " Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
@@ -391,21 +401,25 @@ Plug 'kshenoy/vim-signature'  " Marking the file and move to marks
 Plug 'chrisbra/Recover.vim' " For controlling swapfile
 Plug 'junegunn/vim-easy-align' " Aligning texts
 Plug 'jremmen/vim-ripgrep' " Ripgrep for vim
-Plug 'stefandtw/quickfix-reflector.vim'
-Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
+Plug 'stefandtw/quickfix-reflector.vim' " Change directly on quickfix  list
+" Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'roosta/fzfolds.vim' " Fzf for folds
 " Plug 'nvim-lua/plenary.nvim'
 " Plug 'nvim-lua/popup.nvim'
 " Plug 'windwp/nvim-spectre'
 " Plug 'kyazdani42/nvim-web-devicons'
+" Plug 'brooth/far.vim'
 call plug#end()
 "}}}
-
 "{{{ Fzf folds Plugin
 nnoremap <leader>jf :Folds<CR>
 let g:fzfolds_open = 1
 "}}}
 
+"{{{ Tagbar plugin
+nmap <Leader>tb :TagbarToggle<CR>
+"}}}
+"
 "{{{ Spectre plugin
 "nnoremap <leader>S :lua require('spectre').open()<CR>
 
@@ -447,22 +461,40 @@ command! -bang -nargs=? -complete=dir Files
 nmap <Leader>fF :Files<space>~<CR>
 nmap <Leader>ff :Files<CR>
 nmap <Leader>fb :Buffers<CR>
-nmap <Leader>fh :History<CR>
 nmap <Leader>ft :BTags<CR>
 nmap <Leader>fT :Tags<CR>
 nmap <Leader>fl :BLines<CR>
 nmap <Leader>fL :Lines<CR>
 nmap <Leader>f' :Marks<CR>
-nmap <Leader>f/ :Rg<Space>
+nmap <Leader>fr :Rg<Space>
+nmap <Leader>fh :History<CR>
+nmap <Leader>fH :History/<CR>
 nmap <Leader>fc :History:<CR>
+nmap <Leader>fC :Commands:<CR>
 nmap <Leader>fk :Maps<CR>
+nmap <Leader>fG :Commits<CR>
+nmap <Leader>fg :BCommits<CR>
+nmap <Leader>fs :Snippets<CR>
+nmap <Leader>fe :Filetypes<CR>
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
-imap <c-x><c-w> <plug>(fzf-complete-word)
-imap <c-x><c-p> <plug>(fzf-complete-path)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-" inoremap <c-x><c-f> <plug>(fzf-complete-file)
+" imap <c-f><c-w> <plug>(fzf-complete-word)
+" imap <c-f><c-f> <plug>(fzf-complete-file)
+imap <c-f><c-p> <plug>(fzf-complete-path)
+imap <c-f><c-l> <plug>(fzf-complete-buffer-line)
+" imap <c-f><c-k> <plug>(fzf-complete-line)
+" inoremap <expr> <c-f><c-f> fzf#vim#complete#path('fd')
+" Path completion with custom source command
+inoremap <expr> <c-f><c-f> fzf#vim#complete#path('rg --files')
+" " Word completion with custom spec with popup layout option
+inoremap <expr> <c-f><c-w> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
+" Global line completion (not just open buffers. ripgrep required.)
+inoremap <expr> <c-f><c-k> fzf#vim#complete(fzf#wrap({
+  \ 'prefix': '^.*$',
+  \ 'source': 'rg -n ^ --color always',
+  \ 'options': '--ansi --delimiter : --nth 3..',
+  \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
 "}}}
 
 "{{{ Airline Plugin
@@ -566,19 +598,6 @@ let g:AutoPairsShortcutBackInsert = '<M-b>'
 autocmd FileType markdown  setlocal commentstring=<!--\ %s\ -->
 "}}}
 
-"{{{ Incsearch Plugin
-" map /  <Plug>(incsearch-forward)
-" map ?  <Plug>(incsearch-backward)
-" map g/ <Plug>(incsearch-stay)
-" set hlsearch
-" let g:incsearch#auto_nohlsearch = 1
-" map n  <Plug>(incsearch-nohl-n)
-" map N  <Plug>(incsearch-nohl-N)
-" map *  <Plug>(incsearch-nohl-*)
-" map #  <Plug>(incsearch-nohl-#)
-" map g* <Plug>(incsearch-nohl-g*)
-" map g# <Plug>(incsearch-nohl-g#)
-"}}}
 
 "{{{ Vimwiki Plugin
 "set nocompatible "Already setup upwards
@@ -591,7 +610,7 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown'
 let g:vimwiki_list = [{'path': '~/MEGA/', 'syntax': 'markdown', 'ext': '.md', 'auto_tags': 1}]
 
 " This is to get back the C-I in jumping list
-nmap <F21> <Plug>VimwikiNextLink
+" nmap <F21> <Plug>VimwikiNextLink
 nnoremap <Leader>rt :VimwikiRebuildTags<CR>
 nnoremap <Leader>gt :VimwikiGenerateTagLinks<space>
 " Better to use ripgrep/fzf search rather than vimwiki search which is quite
@@ -640,8 +659,6 @@ imap <silent> [[ [[<esc><Plug>ZettelSearchMap
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
-map  n <Plug>(easymotion-next)
-map  N <Plug>(easymotion-prev)
 let g:EasyMotion_smartcasea= 1
 hi Search ctermbg=Yellow
 map f <Plug>(easymotion-bd-f)
@@ -870,9 +887,9 @@ nmap <Leader>io <Plug>(qf_qf_switch)
 nmap <Leader>it <Plug>(qf_qf_toggle)
 nmap <Leader>is <Plug>(qf_qf_toggle_stay)
 nmap <Leader>ip <Plug>(qf_qf_previous)
-nmap <Leader>in  <Plug>(qf_qf_next)
-nmap <Leader>op   <Plug>(qf_loc_previous)
-nmap <Leader>on   <Plug>(qf_loc_next)
+nmap <Leader>in <Plug>(qf_qf_next)
+nmap <Leader>op <Plug>(qf_loc_previous)
+nmap <Leader>on <Plug>(qf_loc_next)
 nmap <Leader>ot <Plug>(qf_loc_toggle)
 nmap <Leader>os <Plug>(qf_loc_toggle_stay)
 " nmap <F6> <Plug>(qf_loc_toggle_stay)

@@ -79,7 +79,6 @@ bindkey '^[[1;5C' forward-word                                  #
 # bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
 bindkey '^[[Z' undo                                             # Shift+tab undo last action
 
-
 # Theming section
 autoload -U compinit colors zcalc
 compinit -d
@@ -214,6 +213,7 @@ autoload -U add-zsh-hook
 add-zsh-hook precmd mzc_termsupport_precmd
 add-zsh-hook preexec mzc_termsupport_preexec
 
+
 #FZF settings#
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -268,3 +268,12 @@ zinit light Aloxaf/fzf-tab
 zinit light zpm-zsh/ls
 zinit light hlissner/zsh-autopair
 zinit light wookayin/fzf-fasd
+# For vi mode in zsh
+zinit ice depth=1
+zinit light jeffreytse/zsh-vi-mode
+
+# Always starting with insert mode for each command line
+ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+
+# Append a command directly
+zvm_after_init_commands+=('[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh')
