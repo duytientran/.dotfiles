@@ -55,8 +55,7 @@ set laststatus=2                      "Always display the status bar.
 set ruler                      "Always show cursor position.
 set wildmenu                      "Display command line’s tab complete options as a menu.
 set tabpagemax=40                      "Maximum number of tab pages that can be opened from the command line.
-colorscheme desert                      "Change color scheme.
-"set cursorline                      "Highlight the line currently under cursor.
+set cursorline                      "Highlight the line currently under cursor.
 set number                      "Show line numbers on the sidebar.
 set relativenumber                      "Show line number on the current line and relative numbers on all other lines. Works only if the option above ( number ) is enabled.
 augroup toggle_relative_number
@@ -365,9 +364,9 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'mhinz/vim-startify'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/vim-peekaboo'
-" Plug 'SirVer/ultisnips'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/vim-easyoperator-phrase'
 Plug 'haya14busa/vim-easyoperator-line'
@@ -391,7 +390,9 @@ Plug 'mattn/calendar-vim'
 Plug 'preservim/tagbar'
 "--------Language packs------
 "Plug 'elzr/vim-json'
+Plug 'rhysd/reply.vim', { 'on': ['Repl', 'ReplAuto'] }
 " Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
+" Plug 'gaalcaras/ncm-R'
 "--------------------------------
 Plug 'dkarter/bullets.vim' " For using bullets, number indents
 Plug 'ntpeters/vim-better-whitespace' " For controlling whitespace
@@ -402,15 +403,23 @@ Plug 'chrisbra/Recover.vim' " For controlling swapfile
 Plug 'junegunn/vim-easy-align' " Aligning texts
 Plug 'jremmen/vim-ripgrep' " Ripgrep for vim
 Plug 'stefandtw/quickfix-reflector.vim' " Change directly on quickfix  list
-" Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'roosta/fzfolds.vim' " Fzf for folds
+" Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 " Plug 'nvim-lua/plenary.nvim'
 " Plug 'nvim-lua/popup.nvim'
 " Plug 'windwp/nvim-spectre'
 " Plug 'kyazdani42/nvim-web-devicons'
 " Plug 'brooth/far.vim'
+" requires
+"---Lua plugins------
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'neovim/nvim-lspconfig'
 call plug#end()
 "}}}
+
 "{{{ Fzf folds Plugin
 nnoremap <leader>jf :Folds<CR>
 let g:fzfolds_open = 1
@@ -472,6 +481,8 @@ nmap <Leader>fH :History/<CR>
 nmap <Leader>fc :History:<CR>
 nmap <Leader>fC :Commands:<CR>
 nmap <Leader>fk :Maps<CR>
+" nmap <Leader>kt <plug>(fzf-maps-i)
+" nmap <Leader>kl <plug>(fzf-maps-x)
 nmap <Leader>fG :Commits<CR>
 nmap <Leader>fg :BCommits<CR>
 nmap <Leader>fs :Snippets<CR>
@@ -481,16 +492,16 @@ xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 " imap <c-f><c-w> <plug>(fzf-complete-word)
 " imap <c-f><c-f> <plug>(fzf-complete-file)
-imap <c-f><c-p> <plug>(fzf-complete-path)
-imap <c-f><c-l> <plug>(fzf-complete-buffer-line)
+imap <c-x><c-p> <plug>(fzf-complete-path)
+imap <c-x><c-l> <plug>(fzf-complete-buffer-line)
 " imap <c-f><c-k> <plug>(fzf-complete-line)
 " inoremap <expr> <c-f><c-f> fzf#vim#complete#path('fd')
 " Path completion with custom source command
-inoremap <expr> <c-f><c-f> fzf#vim#complete#path('rg --files')
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files')
 " " Word completion with custom spec with popup layout option
-inoremap <expr> <c-f><c-w> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
+inoremap <expr> <c-x><c-w> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
 " Global line completion (not just open buffers. ripgrep required.)
-inoremap <expr> <c-f><c-k> fzf#vim#complete(fzf#wrap({
+inoremap <expr> <c-x><c-k> fzf#vim#complete(fzf#wrap({
   \ 'prefix': '^.*$',
   \ 'source': 'rg -n ^ --color always',
   \ 'options': '--ansi --delimiter : --nth 3..',
@@ -499,6 +510,7 @@ inoremap <expr> <c-f><c-k> fzf#vim#complete(fzf#wrap({
 
 "{{{ Airline Plugin
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#fzf#enabled = 1
 let g:airline_extensions = ['branch', 'hunks', 'coc', 'tabline']
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -564,15 +576,15 @@ let g:vim_markdown_toc_autofit = 1
 
 "{{{ Ultisnips Plugin
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-" let g:UltiSnipsExpandTrigger="<c-f>"
-" let g:UltiSnipsJumpForwardTrigger="<c-j>"
-" let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-" let g:UltiSnipsListSnippets= "<s-tab>"
+let g:UltiSnipsExpandTrigger="<c-l>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+let g:UltiSnipsListSnippets= "<s-tab>"
 " If you want :UltiSnipsEdit to split your window.
-" let g:UltiSnipsEditSplit="normal"
-" let g:UltiSnipsSnippetDirectories=['/home/arenberg/MEGA/resource_tientran/linux_tool/snippet/']
-" nnoremap <Leader>se :UltiSnipsEdit<CR>
-" nnoremap <Leader>sa :UltiSnipsAddFiletypes<space>
+let g:UltiSnipsEditSplit="normal"
+let g:UltiSnipsSnippetDirectories=['/home/arenberg/MEGA/resource_tientran/linux_tool/snippet/']
+nnoremap <Leader>se :UltiSnipsEdit<CR>
+nnoremap <Leader>sa :UltiSnipsAddFiletypes<space>
 "}}}
 
 "{{{ Rainbow Plugin
@@ -759,14 +771,24 @@ let g:startify_bookmarks = [
             \ ]
 "}}}
 
+"{{{ Prettier Plugin
+nmap <Leader>py <Plug>(Prettier)
+" Allow auto formatting for files without "@format" or "@prettier" tag
+let g:prettier#autoformat_require_pragma = 0
+"}}}
+
+""{{{ Move up and down navigation
+" inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+" inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+""}}}
 "{{{ COC-snippets
-imap <C-f> <Plug>(coc-snippets-expand)
-vmap <C-j> <Plug>(coc-snippets-select)
+" imap <C-l> <Plug>(coc-snippets-expand)
+" vmap <C-j> <Plug>(coc-snippets-select)
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
-let g:coc_snippet_next = '<c-n>'
+let g:coc_snippet_next = '<c-j>'
 
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-let g:coc_snippet_prev = '<c-p>'
+let g:coc_snippet_prev = '<c-k>'
 " inoremap <silent><expr> <TAB>
 "       \ pumvisible() ? coc#_select_confirm() :
 "       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -793,13 +815,6 @@ let g:coc_snippet_prev = '<c-p>'
 "   return !col || getline('.')[col - 1]  =~# '\s'
 " endfunction
 "}}}
-
-"{{{ Prettier Plugin
-nmap <Leader>py <Plug>(Prettier)
-" Allow auto formatting for files without "@format" or "@prettier" tag
-let g:prettier#autoformat_require_pragma = 0
-"}}}
-
 "{{{ COC-explorer
 " Add this into coc-settings.json
 " // explorer
@@ -814,7 +829,6 @@ nmap <space>ce :CocCommand explorer<CR>
 " nmap <space>f :CocCommand explorer --preset floating<CR>
 autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
 "}}}
-
 "{{{ COC-Actions
 " Remap for do codeAction of selected region
 function! s:cocActionsOpenFromSelected(type) abort
@@ -823,15 +837,14 @@ endfunction
 xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
 nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 "}}}
-
 "{{{ COC-General
 nmap <Leader>cc :CocConfig<space><CR>
 nmap <Leader>ol :CocList<space><CR>
 " nnoremap <silent> <Leader>yy  :<C-u>CocList -A --normal yank<cr>
 " nnoremap <silent> <Leader>yc  :CocCommand yank.clean<cr>
 " nnoremap <Leader>rw :CocCommand document.renameCurrentWord<cr>
- nnoremap <Leader>es :CocCommand snippets.editSnippets<cr>
- nnoremap <Leader>eo :CocCommand snippets.openSnippetFiles<cr>
+nnoremap <Leader>es :CocCommand snippets.editSnippets<cr>
+nnoremap <Leader>eo :CocCommand snippets.openSnippetFiles<cr>
 " nnoremap <Leader>bt :CocCommand bookmark.toggle<cr>
 " nnoremap <Leader>ba :CocCommand bookmark.annotate<cr>
 " nnoremap <Leader>bk :CocCommand bookmark.prev<cr>
@@ -916,7 +929,6 @@ vnoremap <Leader>sn  y:ThesaurusQueryReplace <C-r>"<CR>
 "}}}
 
 "{{{ Vim Theme Onedark Configuration
-colorscheme onedark
 let g:airline_theme = 'onedark'
 hi Comment cterm=italic
 let g:onedark_hide_endofbuffer=1
@@ -935,6 +947,24 @@ if (has("autocmd") && !has("gui_running"))
     autocmd ColorScheme * call onedark#set_highlight("Normal", { "fg": s:white }) " `bg` will not be styled since there is no `bg` setting
   augroup END
 endif
+
+"Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
+"If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
+"(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
+if (empty($TMUX))
+  if (has("nvim"))
+    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+endif
+syntax on
+colorscheme onedark
 "}}}
 
 "{{{ Additional Configuration
@@ -974,13 +1004,211 @@ nnoremap <silent> <Leader>ad :DisableAutocorrect <CR>
 " vim.repeat plugin: repeat last work with . command
 "}}}
 
-"{{{ Move up and down navigation
-inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-"}}}
 
 "{{{ vim-ripgrep plugin
 "Set smartcase search for ripgrep
 let g:rg_command = 'rg --vimgrep -S'
 let g:rg_highlight = 'True'
+"}}}
+"{{{ Reply vim plugin
+noremap <Leader>ra :ReplAuto <CR>
+Repeatable noremap <Leader>rs :ReplSend <CR>
+noremap <Leader>rS :ReplStop <CR>
+noremap <Leader>rR :ReplRecv <CR>
+noremap <Leader>rl :Repl <CR>
+"}}}
+
+"{{{Plugin Management Keymaps
+nnoremap <Leader>pi :PlugInstall <CR>
+nnoremap <Leader>pu :PlugUpdate <CR>
+nnoremap <Leader>pc :PlugClean <CR>
+"}}}
+
+"{{{ Nvim tree setup
+let g:nvim_tree_side = 'left' "left by default
+let g:nvim_tree_width = 40 "30 by default, can be width_in_columns or 'width_in_percent%'
+let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
+let g:nvim_tree_gitignore = 1 "0 by default
+let g:nvim_tree_auto_open = 1 "0 by default, opens the tree when typing `vim $DIR` or `vim`
+let g:nvim_tree_auto_close = 1 "0 by default, closes the tree when it's the last window
+let g:nvim_tree_auto_ignore_ft = [ 'startify', 'dashboard' ] "empty by default, don't auto open tree on specific filetypes.
+let g:nvim_tree_quit_on_open = 1 "0 by default, closes the tree when you open a file
+let g:nvim_tree_follow = 1 "0 by default, this option allows the cursor to be updated when entering a buffer
+let g:nvim_tree_indent_markers = 1 "0 by default, this option shows indent markers when folders are open
+let g:nvim_tree_hide_dotfiles = 1 "0 by default, this option hides files and folders starting with a dot `.`
+let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
+let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and file icon highlight for opened files/directories.
+let g:nvim_tree_root_folder_modifier = ':~' "This is the default. See :help filename-modifiers for more options
+let g:nvim_tree_tab_open = 1 "0 by default, will open the tree when entering a new tab and the tree was previously open
+let g:nvim_tree_auto_resize = 0 "1 by default, will resize the tree to its saved width when opening a file
+let g:nvim_tree_disable_netrw = 0 "1 by default, disables netrw
+let g:nvim_tree_hijack_netrw = 0 "1 by default, prevents netrw from automatically opening when opening directories (but lets you keep its other utilities)
+let g:nvim_tree_add_trailing = 1 "0 by default, append a trailing slash to folder names
+let g:nvim_tree_group_empty = 1 " 0 by default, compact folders that only contain a single folder into one node in the file tree
+let g:nvim_tree_lsp_diagnostics = 1 "0 by default, will show lsp diagnostics in the signcolumn. See :help nvim_tree_lsp_diagnostics
+let g:nvim_tree_disable_window_picker = 1 "0 by default, will disable the window picker.
+let g:nvim_tree_hijack_cursor = 0 "1 by default, when moving cursor in the tree, will position the cursor at the start of the file on the current line
+let g:nvim_tree_icon_padding = ' ' "one space by default, used for rendering the space between the icon and the filename. Use with caution, it could break rendering if you set an empty string depending on your font.
+let g:nvim_tree_symlink_arrow = ' >> ' " defaults to ' ➛ '. used as a separator between symlinks' source and target.
+let g:nvim_tree_update_cwd = 1 "0 by default, will update the tree cwd when changing nvim's directory (DirChanged event). Behaves strangely with autochdir set.
+let g:nvim_tree_respect_buf_cwd = 1 "0 by default, will change cwd of nvim-tree to that of new buffer's when opening nvim-tree.
+let g:nvim_tree_window_picker_exclude = {
+    \   'filetype': [
+    \     'packer',
+    \     'qf'
+    \   ],
+    \   'buftype': [
+    \     'terminal'
+    \   ]
+    \ }
+" Dictionary of buffer option names mapped to a list of option values that
+" indicates to the window picker that the buffer's window should not be
+" selectable.
+let g:nvim_tree_special_files = { 'README.md': 1, 'Makefile': 1, 'MAKEFILE': 1 } " List of filenames that gets highlighted with NvimTreeSpecialFile
+let g:nvim_tree_show_icons = {
+    \ 'git': 1,
+    \ 'folders': 1,
+    \ 'files': 1,
+    \ 'folder_arrows': 1,
+    \ }
+"If 0, do not show the icons for one of 'git' 'folder' and 'files'
+"1 by default, notice that if 'files' is 1, it will only display
+"if nvim-web-devicons is installed and on your runtimepath.
+"if folder is 1, you can also tell folder_arrows 1 to show small arrows next to the folder icons.
+"but this will not work when you set indent_markers (because of UI conflict)
+
+" default will show icon by default if no icon is provided
+" default shows no icon by default
+let g:nvim_tree_icons = {
+    \ 'default': '',
+    \ 'symlink': '',
+    \ 'git': {
+    \   'unstaged': "✗",
+    \   'staged': "✓",
+    \   'unmerged': "",
+    \   'renamed': "➜",
+    \   'untracked': "★",
+    \   'deleted': "",
+    \   'ignored': "◌"
+    \   },
+    \ 'folder': {
+    \   'arrow_open': "",
+    \   'arrow_closed': "",
+    \   'default': "",
+    \   'open': "",
+    \   'empty': "",
+    \   'empty_open': "",
+    \   'symlink': "",
+    \   'symlink_open': "",
+    \   },
+    \   'lsp': {
+    \     'hint': "",
+    \     'info': "",
+    \     'warning': "",
+    \     'error': "",
+    \   }
+    \ }
+
+nnoremap <leader>ot :NvimTreeToggle<CR>
+nnoremap <leader>tr :NvimTreeRefresh<CR>
+nnoremap <leader>tf :NvimTreeFindFile<CR>
+" NvimTreeOpen, NvimTreeClose and NvimTreeFocus are also available if you need them
+
+set termguicolors " this variable must be enabled for colors to be applied properly
+
+" a list of groups can be found at `:help nvim_tree_highlight`
+highlight NvimTreeFolderIcon guibg=blue
+
+let g:nvim_tree_disable_default_keybindings = 1
+lua <<EOF
+    local tree_cb = require'nvim-tree.config'.nvim_tree_callback
+    -- default mappings
+    vim.g.nvim_tree_bindings = {
+      { key = {"<CR>", "l", "<2-LeftMouse>"}, cb = tree_cb("edit") },
+      { key = {"<2-RightMouse>"},    cb = tree_cb("cd") },
+      { key = "<C-v>",                        cb = tree_cb("vsplit") },
+      { key = "<C-x>",                        cb = tree_cb("split") },
+      { key = "<C-t>",                        cb = tree_cb("tabnew") },
+      { key = "<",                            cb = tree_cb("prev_sibling") },
+      { key = ">",                            cb = tree_cb("next_sibling") },
+      { key = "[",                            cb = tree_cb("parent_node") },
+      { key = "<BS>",                         cb = tree_cb("close_node") },
+      { key = "h",                       cb = tree_cb("close_node") },
+      { key = "<Tab>",                        cb = tree_cb("preview") },
+      { key = "gg",                            cb = tree_cb("first_sibling") },
+      { key = "G",                            cb = tree_cb("last_sibling") },
+      { key = "I",                            cb = tree_cb("toggle_ignored") },
+      { key = "H",                            cb = tree_cb("toggle_dotfiles") },
+      { key = "R",                            cb = tree_cb("refresh") },
+      { key = "a",                            cb = tree_cb("create") },
+      { key = "d",                            cb = tree_cb("remove") },
+      { key = "r",                            cb = tree_cb("rename") },
+      { key = "<C-r>",                        cb = tree_cb("full_rename") },
+      { key = "x",                            cb = tree_cb("cut") },
+      { key = "c",                            cb = tree_cb("copy") },
+      { key = "p",                            cb = tree_cb("paste") },
+      { key = "y",                            cb = tree_cb("copy_name") },
+      { key = "Y",                            cb = tree_cb("copy_path") },
+      { key = "gy",                           cb = tree_cb("copy_absolute_path") },
+      { key = "[c",                           cb = tree_cb("prev_git_item") },
+      { key = "]c",                           cb = tree_cb("next_git_item") },
+      { key = "-",                            cb = tree_cb("dir_up") },
+      { key = "e",                            cb = tree_cb("system_open") },
+      { key = "q",                            cb = tree_cb("close") },
+      { key = "?",                           cb = tree_cb("toggle_help") },
+    }
+EOF
+"}}}
+"{{{ Treesiter vim plugin
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = {},
+  },
+  incremental_selection = {
+    enable = true,
+    disable = {},
+  },
+  indent = {
+    enable = true,
+    disable = {},
+  },
+  textobjects = {
+    enable = false,
+    disable = {},
+  },
+  ensure_installed = {
+    "tsx",
+    "toml",
+    "fish",
+    "php",
+    "json",
+    "yaml",
+    "swift",
+    "html",
+    "scss",
+    "bash",
+    "lua",
+    "julia",
+    "regex",
+    "scala",
+    "python",
+    "vim",
+    "yaml"
+  },
+}
+EOF
+"}}}
+"{{{ Indent plugin
+lua <<EOF
+  require("indent_blankline").setup {
+        char = "|",
+        buftype_exclude = {"terminal"},
+        space_char = " ",
+        use_treesitter = {v = true}
+
+
+      }
+EOF
 "}}}
