@@ -109,9 +109,19 @@ set confirm                      "Display a confirmation dialog when closing an 
 "}}}
 
 "{{{Vim vanilla undo configuration
-" set undofile " Maintain undo history between sessions
 set undodir=~/.config/nvim/undodir
-"}}}
+if has("persistent_undo")
+   let target_path = expand('~/.config/nvim/undodir')
+
+    " create the directory and any parent directories
+    " if the location does not exist.
+    if !isdirectory(target_path)
+        call mkdir(target_path, "p", 0700)
+    endif
+
+    let &undodir=target_path
+    set undofile
+endif"}}}
 
 "{{{ Vim vanilla windows navigation configuration
 nnoremap <C-H> <C-W><C-H>
@@ -352,6 +362,7 @@ Plug 'romainl/vim-qf' " Quickfix window control
 Plug 'vim-scripts/Rename2' " Rename the file
 Plug 'mbbill/undotree' "Undotree
 Plug 'arthurxavierx/vim-caser' " Change case for words
+Plug 'sainnhe/everforest'
 Plug 'joshdick/onedark.vim' " Theme for vim
 Plug 'vim-airline/vim-airline' " Status line for vim
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
@@ -417,6 +428,14 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'glepnir/lspsaga.nvim'
+" Plug 'nvim-lua/completion-nvim'
+" Plug 'hrsh7th/nvim-cmp'
+" Plug 'hrsh7th/cmp-buffer'
+" Plug 'hrsh7th/cmp-nvim-lua'
+" Plug 'hrsh7th/vim-vsnip'
+" Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'hrsh7th/nvim-compe'
 call plug#end()
 "}}}
 
@@ -576,9 +595,9 @@ let g:vim_markdown_toc_autofit = 1
 
 "{{{ Ultisnips Plugin
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-l>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+let g:UltiSnipsExpandTrigger="<C-f>"
+let g:UltiSnipsJumpForwardTrigger="<C-j>"
+let g:UltiSnipsJumpBackwardTrigger="<C-k>"
 let g:UltiSnipsListSnippets= "<s-tab>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="normal"
@@ -785,10 +804,10 @@ let g:prettier#autoformat_require_pragma = 0
 " imap <C-l> <Plug>(coc-snippets-expand)
 " vmap <C-j> <Plug>(coc-snippets-select)
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
-let g:coc_snippet_next = '<c-j>'
+" let g:coc_snippet_next = '<c-j>'
 
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-let g:coc_snippet_prev = '<c-k>'
+" let g:coc_snippet_prev = '<c-k>'
 " inoremap <silent><expr> <TAB>
 "       \ pumvisible() ? coc#_select_confirm() :
 "       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -825,26 +844,26 @@ let g:coc_snippet_prev = '<c-k>'
     "<cr>": ["expandable?", "expand", "open"],
     "v": "open:vsplit"
     "}}
-nmap <space>ce :CocCommand explorer<CR>
+" nmap <space>ce :CocCommand explorer<CR>
 " nmap <space>f :CocCommand explorer --preset floating<CR>
-autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
+" autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
 "}}}
-"{{{ COC-Actions
-" Remap for do codeAction of selected region
-function! s:cocActionsOpenFromSelected(type) abort
-  execute 'CocCommand actions.open ' . a:type
-endfunction
-xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
-nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
-"}}}
-"{{{ COC-General
-nmap <Leader>cc :CocConfig<space><CR>
-nmap <Leader>ol :CocList<space><CR>
-" nnoremap <silent> <Leader>yy  :<C-u>CocList -A --normal yank<cr>
-" nnoremap <silent> <Leader>yc  :CocCommand yank.clean<cr>
-" nnoremap <Leader>rw :CocCommand document.renameCurrentWord<cr>
-nnoremap <Leader>es :CocCommand snippets.editSnippets<cr>
-nnoremap <Leader>eo :CocCommand snippets.openSnippetFiles<cr>
+""{{{ COC-Actions
+"" Remap for do codeAction of selected region
+"function! s:cocActionsOpenFromSelected(type) abort
+"  execute 'CocCommand actions.open ' . a:type
+"endfunction
+"xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+"nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+""}}}
+""{{{ COC-General
+"nmap <Leader>cc :CocConfig<space><CR>
+"nmap <Leader>ol :CocList<space><CR>
+"" nnoremap <silent> <Leader>yy  :<C-u>CocList -A --normal yank<cr>
+"" nnoremap <silent> <Leader>yc  :CocCommand yank.clean<cr>
+"" nnoremap <Leader>rw :CocCommand document.renameCurrentWord<cr>
+"nnoremap <Leader>es :CocCommand snippets.editSnippets<cr>
+"nnoremap <Leader>eo :CocCommand snippets.openSnippetFiles<cr>
 " nnoremap <Leader>bt :CocCommand bookmark.toggle<cr>
 " nnoremap <Leader>ba :CocCommand bookmark.annotate<cr>
 " nnoremap <Leader>bk :CocCommand bookmark.prev<cr>
@@ -863,8 +882,10 @@ let g:tmux_navigator_disable_when_zoomed = 1
 "}}}
 
 "{{{ Calendar Plugin
+let g:calendar_no_mappings=0
 let g:calendar_monday = 1
 let g:calendar_weeknm = 1 " WK01
+nnoremap <Leader>cr :Calendar
 " let g:calendar_filetype = 'markdown'
 " let g:calendar_number_of_months = 5
 "}}}
@@ -965,6 +986,22 @@ if (empty($TMUX))
 endif
 syntax on
 colorscheme onedark
+"}}}
+
+"{{{ Everforest colorscheme plugin
+""Important!!
+"if has('termguicolors')
+"  set termguicolors
+"endif
+"" For dark version.
+"set background=dark
+"" For light version.
+"" set background=light
+"" Set contrast.
+"" This configuration option should be placed before `colorscheme everforest`.
+"" Available values: 'hard', 'medium'(default), 'soft'
+"let g:everforest_background = 'hard'
+"colorscheme everforest
 "}}}
 
 "{{{ Additional Configuration
@@ -1180,7 +1217,7 @@ require'nvim-treesitter.configs'.setup {
   },
   ensure_installed = {
     "tsx",
-    "toml",
+    "r",
     "fish",
     "php",
     "json",
@@ -1195,7 +1232,6 @@ require'nvim-treesitter.configs'.setup {
     "scala",
     "python",
     "vim",
-    "yaml"
   },
 }
 EOF
@@ -1207,8 +1243,209 @@ lua <<EOF
         buftype_exclude = {"terminal"},
         space_char = " ",
         use_treesitter = {v = true}
-
-
       }
 EOF
+"}}}
+"{{{ LSP plugin
+
+lua <<EOF
+require'lspconfig'.pyright.setup{}
+require'lspconfig'.r_language_server.setup{}
+require'lspconfig'.bashls.setup{}
+require'lspconfig'.julials.setup{}
+require'lspconfig'.diagnosticls.setup{}
+EOF
+" auto-format
+autocmd BufWritePre *.py lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.r lua vim.lsp.buf.formatting_sync(nil, 100)
+"}}}
+"{{{ LSPsaga plugin
+
+lua <<EOF
+require'lspsaga'.init_lsp_saga()
+EOF
+" lua <<EOF
+" require'lspsaga'.init_lsp_saga{
+"   error_sign = '',
+"   warn_sign = '',
+"   hint_sign = '',
+"   infor_sign = '',
+"   border_style = "round",
+"   }
+" EOF
+
+" " -- show hover doc
+nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
+" " -- scroll down hover doc or scroll in definition preview
+nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>
+nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
+
+" " -- code action
+nnoremap <silent><leader>ca <cmd>lua require('lspsaga.codeaction').code_action()<CR>
+vnoremap <silent><leader>ca :<C-U>lua require('lspsaga.codeaction').range_code_action()<CR>
+
+" " -- lsp provider to find the cursor word definition and reference
+nnoremap <silent> gh <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
+
+" " -- show signature help
+nnoremap <silent> gs <cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>
+
+" " -- rename
+nnoremap <silent>gr <cmd>lua require('lspsaga.rename').rename()<CR>
+
+" " -- preview definition
+nnoremap <silent> gd <cmd>lua require'lspsaga.provider'.preview_definition()<CR>
+
+nnoremap <silent> <leader>cd :Lspsaga show_line_diagnostics<CR>
+" " -- only show diagnostic if cursor is over the area
+nnoremap <silent><leader>cc <cmd>lua require'lspsaga.diagnostic'.show_cursor_diagnostics()<CR>
+
+" " -- jump diagnostic
+nnoremap <silent> [e <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_prev()<CR>
+nnoremap <silent> ]e <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>
+
+" " -- float terminal also you can pass the cli command in open_float_terminal function
+nnoremap <silent> <A-d> <cmd>lua require('lspsaga.floaterm').open_float_terminal()<CR>
+
+"}}}
+""{{{ Cmp completion plugins
+
+"" Setup global configuration. More on configuration below.
+"lua <<EOF
+"  local cmp = require('cmp')
+"  cmp.setup {
+"    snippet = {
+"      expand = function(args)
+"        -- You must install `vim-vsnip` if you use the following as-is.
+"        vim.fn['vsnip#anonymous'](args.body)
+"      end
+"    },
+
+"-- You must set mapping if you want.
+"    mapping = {
+"      ['<C-p>'] = cmp.mapping.select_prev_item(),
+"      ['<C-n>'] = cmp.mapping.select_next_item(),
+"      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+"      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+"      ['<C-Space>'] = cmp.mapping.complete(),
+"      ['<C-e>'] = cmp.mapping.close(),
+"      ['<CR>'] = cmp.mapping.confirm({
+"        behavior = cmp.ConfirmBehavior.Insert,
+"        select = true,
+"      })
+"    },
+
+"    -- You should specify your *installed* sources.
+"    sources = {
+"      { name = 'buffer' },
+"    },
+"  }
+"EOF
+
+"" Setup buffer configuration (nvim-lua source only enables in Lua filetype).
+"autocmd FileType lua lua require'cmp'.setup.buffer {
+"\   sources = {
+"\     { name = 'buffer' },
+"\     { name = 'nvim_lua' },
+"\   },
+"\ }
+""}}}
+"{{{ nvim-compe autocomplete plugin
+set completeopt=menuone,noselect
+let g:compe = {}
+let g:compe.enabled = v:true
+let g:compe.autocomplete = v:true
+let g:compe.debug = v:false
+let g:compe.min_length = 1
+let g:compe.preselect = 'enable'
+let g:compe.throttle_time = 80
+let g:compe.source_timeout = 200
+let g:compe.resolve_timeout = 800
+let g:compe.incomplete_delay = 400
+let g:compe.max_abbr_width = 100
+let g:compe.max_kind_width = 100
+let g:compe.max_menu_width = 100
+let g:compe.documentation = v:true
+let g:compe.source = {}
+let g:compe.source.path = v:true
+let g:compe.source.buffer = v:true
+let g:compe.source.calc = v:true
+let g:compe.source.nvim_lsp = v:true
+let g:compe.source.nvim_lua = v:true
+let g:compe.source.vsnip = v:true
+let g:compe.source.ultisnips = v:true
+let g:compe.source.luasnip = v:true
+let g:compe.source.emoji = v:true
+
+inoremap <silent><expr> <C-f> compe#complete()
+inoremap <silent><expr> <C-l>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+" inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+lua <<EOF
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    'documentation',
+    'detail',
+    'additionalTextEdits',
+  }
+}
+
+require'lspconfig'.rust_analyzer.setup {
+  capabilities = capabilities,
+}
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+
+
+
+
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif vim.fn["UltiSnips#CanExpandSnippet"]() == 1 or vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
+    return vim.api.nvim_replace_termcodes("<C-R>=UltiSnips#ExpandSnippetOrJump()<CR>", true, true, true)
+  elseif check_back_space() then
+    return t "<C-J>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  elseif vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
+    return vim.api.nvim_replace_termcodes("<C-R>=UltiSnips#JumpBackwards()<CR>", true, true, true)
+  else
+    -- If <S-Tab> is not working in your terminal, change it to <C-h>
+    return t "<C-K>"
+  end
+end
+
+
+EOF
+" vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+" vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+" vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+" vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
+
+" vim.api.nvim_set_keymap("i", "<C-J>", "v:lua.tab_complete()", {expr = true})
+" vim.api.nvim_set_keymap("s", "<C-J>", "v:lua.tab_complete()", {expr = true})
+" vim.api.nvim_set_keymap("i", "<C-K>", "v:lua.s_tab_complete()", {expr = true})
+" vim.api.nvim_set_keymap("s", "<C-K>", "v:lua.s_tab_complete()", {expr = true})
+
 "}}}
