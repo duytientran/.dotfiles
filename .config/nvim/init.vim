@@ -47,7 +47,7 @@ set isfname-== "When using commands like Ctrl-x Ctrl-f for filename completion, 
  " set list listchars=tab:>·,trail:·,nbsp:·
 " Spelling check for Filetype
 "autocmd FileType markdown setlocal spell
-"}}}
+
 
 "{{{ Interface configuration
 set conceallevel=0
@@ -138,6 +138,8 @@ onoremap <expr> n  'Nn'[v:searchforward]
 nnoremap <expr> N  'nN'[v:searchforward]
 xnoremap <expr> N  'nN'[v:searchforward]
 onoremap <expr> N  'nN'[v:searchforward]
+nnoremap <A-o> g;
+nnoremap <A-i> g,
 "}}}
 
 
@@ -148,14 +150,8 @@ vnoremap K :m '<-2<CR>gv=gv " Move visual selection
 "}}}
 
 "{{{ Vim folding configuration
-
 set foldmethod=marker "Defines the type of folding.
-set foldlevel=20 "Open fold when open a file
-
-"}}}
-
-"{{{Vim syntax folding configuration
-
+set foldlevel=20 " Large value for opening fold when open a file
 let perl_fold=1
 let perl_fold_blocks = 1
 let sh_fold_enabled=1
@@ -391,6 +387,7 @@ Plug 'haya14busa/vim-easyoperator-line'
 "Plug 'tpope/vim-rhubarb'
 "Plug 'junegunn/gv.vim'
 "---------------------------
+Plug 'mracos/mermaid.vim' " Support mermaid syntax for vim https://support.typora.io/Draw-Diagrams-With-Markdown/
 Plug 'dhruvasagar/vim-table-mode' " For creating tables
 Plug 'plasticboy/vim-markdown'
 Plug 'mzlogin/vim-markdown-toc'
@@ -429,6 +426,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'glepnir/lspsaga.nvim'
+Plug 'ray-x/lsp_signature.nvim'
 " Plug 'nvim-lua/completion-nvim'
 " Plug 'hrsh7th/nvim-cmp'
 " Plug 'hrsh7th/cmp-buffer'
@@ -1061,7 +1059,7 @@ nnoremap <Leader>pu :PlugUpdate <CR>
 nnoremap <Leader>pc :PlugClean <CR>
 "}}}
 
-"{{{ Nvim tree setup
+"{{{ Nvim tree setup plugin
 let g:nvim_tree_side = 'left' "left by default
 let g:nvim_tree_width = 40 "30 by default, can be width_in_columns or 'width_in_percent%'
 let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
@@ -1264,15 +1262,6 @@ autocmd BufWritePre *.r lua vim.lsp.buf.formatting_sync(nil, 100)
 lua <<EOF
 require'lspsaga'.init_lsp_saga()
 EOF
-" lua <<EOF
-" require'lspsaga'.init_lsp_saga{
-"   error_sign = '',
-"   warn_sign = '',
-"   hint_sign = '',
-"   infor_sign = '',
-"   border_style = "round",
-"   }
-" EOF
 
 " " -- show hover doc
 nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
@@ -1285,10 +1274,10 @@ nnoremap <silent><leader>ca <cmd>lua require('lspsaga.codeaction').code_action()
 vnoremap <silent><leader>ca :<C-U>lua require('lspsaga.codeaction').range_code_action()<CR>
 
 " " -- lsp provider to find the cursor word definition and reference
-nnoremap <silent> gh <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
+nnoremap <silent> gf <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
 
 " " -- show signature help
-nnoremap <silent> gs <cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>
+nnoremap <silent> gh <cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>
 
 " " -- rename
 nnoremap <silent>gr <cmd>lua require('lspsaga.rename').rename()<CR>
@@ -1296,7 +1285,7 @@ nnoremap <silent>gr <cmd>lua require('lspsaga.rename').rename()<CR>
 " " -- preview definition
 nnoremap <silent> gd <cmd>lua require'lspsaga.provider'.preview_definition()<CR>
 
-nnoremap <silent> <leader>cd :Lspsaga show_line_diagnostics<CR>
+nnoremap <silent><leader>cd <cmd>lua require'lspsaga.diagnostic'.show_line_diagnostics()<CR>
 " " -- only show diagnostic if cursor is over the area
 nnoremap <silent><leader>cc <cmd>lua require'lspsaga.diagnostic'.show_cursor_diagnostics()<CR>
 
@@ -1306,7 +1295,7 @@ nnoremap <silent> ]e <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_ne
 
 " " -- float terminal also you can pass the cli command in open_float_terminal function
 nnoremap <silent> <A-d> <cmd>lua require('lspsaga.floaterm').open_float_terminal()<CR>
-
+tnoremap <silent> <A-d> <C-\><C-n>:lua require('lspsaga.floaterm').close_float_terminal()<CR>
 "}}}
 ""{{{ Cmp completion plugins
 
@@ -1410,16 +1399,13 @@ end
 --- move to prev/next item in completion menuone
 --- jump to prev/next snippet's placeholder
 
-
-
-
 _G.tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-n>"
   elseif vim.fn["UltiSnips#CanExpandSnippet"]() == 1 or vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
     return vim.api.nvim_replace_termcodes("<C-R>=UltiSnips#ExpandSnippetOrJump()<CR>", true, true, true)
   elseif check_back_space() then
-    return t "<C-J>"
+    return t "<Tab>"
   else
     return vim.fn['compe#complete']()
   end
@@ -1431,21 +1417,15 @@ _G.s_tab_complete = function()
     return vim.api.nvim_replace_termcodes("<C-R>=UltiSnips#JumpBackwards()<CR>", true, true, true)
   else
     -- If <S-Tab> is not working in your terminal, change it to <C-h>
-    return t "<C-K>"
+    return t "<S-Tab>"
   end
 end
-
-
 EOF
-" vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-" vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-" vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-" vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 
 
-" vim.api.nvim_set_keymap("i", "<C-J>", "v:lua.tab_complete()", {expr = true})
-" vim.api.nvim_set_keymap("s", "<C-J>", "v:lua.tab_complete()", {expr = true})
-" vim.api.nvim_set_keymap("i", "<C-K>", "v:lua.s_tab_complete()", {expr = true})
-" vim.api.nvim_set_keymap("s", "<C-K>", "v:lua.s_tab_complete()", {expr = true})
-
+"{{{lsp-signature plugin
+lua <<EOF
+require "lsp_signature".setup()
+return M
+EOF
 "}}}
