@@ -163,10 +163,6 @@ let javascript_fold=1
 let xml_syntax_folding=1
 "}}}
 
-"{{{Vim template loading
-:autocmd BufNewFile *.html 1r ~/.vim/templates/html.tpl
-"}}}
-
 "{{{Vim buffer mapping
 
 noremap <leader>bd :bd<CR>      " Close the buffer.
@@ -391,10 +387,13 @@ Plug 'mracos/mermaid.vim' " Support mermaid syntax for vim https://support.typor
 Plug 'dhruvasagar/vim-table-mode' " For creating tables
 Plug 'plasticboy/vim-markdown'
 Plug 'mzlogin/vim-markdown-toc'
-Plug 'vimwiki/vimwiki', {'branch': 'dev'}
-Plug 'mattn/calendar-vim'
-" Plug 'masukomi/vim-markdown-folding'
+" Plug 'vimwiki/vimwiki', {'branch': 'dev'}
+Plug 'vimwiki/vimwiki'
 " Plug 'michal-h21/vim-zettel'
+Plug 'mattn/calendar-vim'
+" Plug 'yazgoo/yank-history'
+Plug 'tibabit/vim-templates'
+" Plug 'masukomi/vim-markdown-folding'
 Plug 'preservim/tagbar'
 "--------Language packs------
 "Plug 'elzr/vim-json'
@@ -434,6 +433,7 @@ Plug 'ray-x/lsp_signature.nvim'
 " Plug 'hrsh7th/vim-vsnip'
 " Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'hrsh7th/nvim-compe'
+Plug 'lervag/wiki.vim'
 call plug#end()
 "}}}
 
@@ -493,6 +493,7 @@ nmap <Leader>fl :BLines<CR>
 nmap <Leader>fL :Lines<CR>
 nmap <Leader>f' :Marks<CR>
 nmap <Leader>fr :Rg<Space>
+nmap <Leader>fR :RG<CR>
 nmap <Leader>fh :History<CR>
 nmap <Leader>fH :History/<CR>
 nmap <Leader>fc :History:<CR>
@@ -523,6 +524,17 @@ inoremap <expr> <c-x><c-k> fzf#vim#complete(fzf#wrap({
   \ 'source': 'rg -n ^ --color always',
   \ 'options': '--ansi --delimiter : --nth 3..',
   \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
+
+
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 "}}}
 
 "{{{ Airline Plugin
@@ -629,28 +641,26 @@ autocmd FileType markdown  setlocal commentstring=<!--\ %s\ -->
 
 
 "{{{ Vimwiki Plugin
-"set nocompatible "Already setup upwards
-let g:vimwiki_filetypes = ['markdown']
 filetype plugin on
 syntax on
+let g:vimwiki_filetypes = ['markdown']
 " let g:vimwiki_listsyms = '✗○◐●✓'
 let g:vimwiki_global_ext = 0
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': '~/MEGA/', 'syntax': 'markdown', 'ext': '.md', 'auto_tags': 1}]
+let g:vimwiki_list = [{'path': '~/MEGA/', 'syntax': 'markdown', 'ext': '.md', 'auto_generate_tags': 1, 'index': 'mega_index', 'name': 'Mega Wiki'}]
 
 " This is to get back the C-I in jumping list
 " nmap <F21> <Plug>VimwikiNextLink
 nnoremap <Leader>rt :VimwikiRebuildTags<CR>
-nnoremap <Leader>gt :VimwikiGenerateTagLinks<space>
+nnoremap <Leader>gt :VimwikiRebuildTags<CR>:VimwikiGenerateTagLinks<CR>
 " Better to use ripgrep/fzf search rather than vimwiki search which is quite
 " slow
-nnoremap <Leader>st :VimwikiSearchTags<space>
-nnoremap <Leader>sl :VimwikiSearch<space>
-nnoremap <Leader>gl :VimwikiGenerateLinks<space>
-nnoremap <Leader>vc :VimwikiCheckLinks<space>
+" nnoremap <Leader>st :VimwikiSearchTags<space>
+" nnoremap <Leader>sl :VimwikiSearch<space>
+nnoremap <Leader>gl :VimwikiGenerateLinks<CR>
+nnoremap <Leader>vc :VimwikiCheckLinks<CR>
 nnoremap <Leader>vt :VimwikiTOC<CR>
-nnoremap <Leader>bl :VimwikiBackLinks<CR>
-
+nnoremap <Leader>bl :VimwikiBacklinks<CR>
 command! Diary VimwikiDiaryIndex
 augroup vimwikigroup
     autocmd!
@@ -659,15 +669,19 @@ augroup vimwikigroup
 augroup end
 "}}}
 
-"{{{ Zettel Plugin
+""{{{ Zettel Plugin
+" let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always"
+" let g:zettel_fzf_options = ['--exact', '--tiebreak=end']
 " let g:zettel_options = [{"template" :  "~/MEGA/brain_tientran/dot_files/zettel_template.tpl"}]
-" let g:nv_search_paths = ['~/MEGA/']
+" " let g:nv_search_paths = ['~/MEGA/']
 " let g:zettel_default_mappings = 0
-" let g:zettel_format = "%y%m%d%H%M_%title"
-" let g:zettel_fzf_command = "rg--column --line-number --ignore-case \ --no-heading --color=always "
+" let g:zettel_format = "%raw_title"
+" " let g:zettel_format = "%y%m%d%H%M_%title"
+" "let g:zettel_fzf_command = "rg--column --line-number --ignore-case \ --no-heading --color=always "
+""" let g:wiki_root = '~/Downloads/testing/'
 " let g:zettel_backlinks_title = "Backlinks"
 " let g:zettel_link_format="[%title](%link)"
-imap <silent> [[ [[<esc><Plug>ZettelSearchMap
+" " imap <silent> [[ [[<esc><Plug>ZettelSearchMap
 " nmap <Leader>zy <Plug>ZettelYankNameMap
 " nmap <Leader>zl <Plug>ZettelReplaceFileWithLink
 " nnoremap <Leader>zs :ZettelSearch<cr>
@@ -682,7 +696,7 @@ imap <silent> [[ [[<esc><Plug>ZettelSearchMap
 " imap <silent> [[ [[<esc><Plug>ZettelSearchMap
 " xmap zm <Plug>ZettelNewSelectedMap
 " nnoremap <Leader>zgt :VimwikiRebuildTags<cr>:ZettelGenerateTags<space>
-"}}}
+""}}}
 
 "{{{ Easymotion Plugins and Accesories
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
@@ -880,10 +894,11 @@ let g:tmux_navigator_disable_when_zoomed = 1
 "}}}
 
 "{{{ Calendar Plugin
+" let g:calendar_diary='~/MEGA/diary/'
 let g:calendar_no_mappings=0
 let g:calendar_monday = 1
 let g:calendar_weeknm = 1 " WK01
-nnoremap <Leader>cr :Calendar
+nnoremap <Leader>cr :Calendar<CR>
 " let g:calendar_filetype = 'markdown'
 " let g:calendar_number_of_months = 5
 "}}}
@@ -1421,11 +1436,68 @@ _G.s_tab_complete = function()
   end
 end
 EOF
-
+"}}}
 
 "{{{lsp-signature plugin
 lua <<EOF
 require "lsp_signature".setup()
 return M
 EOF
+"}}}
+
+"{{{ Yank history plugin
+nnoremap <Leader>yc :YankHistoryClean<CR>
+nnoremap <Leader>yh :YankHistoryPaste<CR>
+nnoremap <Leader>yo :YankHistoryRg<CR>
+""}}}
+"{{{Recover swap plugin
+nnoremap <Leader>dc :diffoff!<CR>:close<CR>
+"}}}
+"{{{ Template  plugin
+let g:tmpl_search_paths = ['~/MEGA/resource_tientran/linux_tool/vim_template/']
+"}}}
+
+"{{{Wiki.vim plugin
+let g:wiki_mappings_use_defaults = 'none'
+let g:wiki_filetypes = ['md']
+" function! WikiRoot()
+"       let l:local = finddir( ';./')
+"       return !empty(l:local) ? l:local : '~/MEGA/'
+"     endfunction
+let g:wiki_root = '~/MEGA/'
+let g:wiki_journal = {
+        \ 'name': 'journal',
+        \ 'frequency': 'daily',
+        \ 'date_format': {
+        \   'daily' : '%Y%m%d',
+        \   'weekly' : '%Y_w%V',
+        \   'monthly' : '%Y_m%m',
+        \ },
+        \}
+let g:wiki_export = {
+        \ 'args' : '',
+        \ 'from_format' : 'markdown',
+        \ 'ext' : 'pdf',
+        \ 'link_ext_replace': v:false,
+        \ 'view' : v:false,
+        \ 'output':  '~/Downloads/abc/',
+        \}
+let g:wiki_tags = {
+        \ 'output' : 'cursor',
+        \}
+let g:wiki_fzf_pages_opts = '--preview "cat {1}"'
+let g:wiki_tags_scan_num_lines = 'all'
+let g:wiki_link_extension = ['md']
+let g:wiki_link_target_type = ['md']
+let g:wiki_filetypes = ['md']
+
+" let g:wiki_zotero_root = 'somedir'
+nnoremap <Leader>wg <plug>(wiki-graph-in)
+nnoremap <Leader>wG <plug>(wiki-graph-out)
+nnoremap <Leader>wp <plug>(wiki-export)
+xnoremap <Leader>wp <plug>(wiki-export)
+nnoremap <Leader>tl <plug>(wiki-tag-list)
+nnoremap <Leader>st <plug>(wiki-fzf-tags)
+nnoremap <Leader>sc <plug>(wiki-fzf-toc)
+nnoremap <Leader>sp <plug>(wiki-fzf-page)
 "}}}
