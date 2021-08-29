@@ -398,7 +398,7 @@ Plug 'preservim/tagbar'
 "--------Language packs------
 "Plug 'elzr/vim-json'
 Plug 'rhysd/reply.vim', { 'on': ['Repl', 'ReplAuto'] }
-" Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
+" Plug '/Nvim-R', {'branch': 'stable'}
 " Plug 'gaalcaras/ncm-R'
 "--------------------------------
 Plug 'dkarter/bullets.vim' " For using bullets, number indents
