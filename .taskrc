@@ -11,7 +11,7 @@
 # Use the command 'task show' to see all defaults and overrides
 
 # Files
-data.location=~/MEGA/project_tientran/.task
+data.location=~/MEGA/resource_tientran/.task
 # Inthe.am configurations
 taskd.certificate=~/.task/private.certificate.pem
 taskd.key=~/.task/private.key.pem
@@ -198,3 +198,6 @@ uda.stage.value=begin,track,wip,review,final
 uda.estimate.type=duration
 uda.estimate.label=Est
 verbose=context,filter,blank,header,footnote,label,new-id,new-uuid,affected,edit,special,project,sync,unwait,recur
+
+alias.attach=execute /usr/share/taskopen/scripts/attach
+alias.attach=exec '\/usr\/share\/taskopen\/scripts\/attach_vifm' -t
