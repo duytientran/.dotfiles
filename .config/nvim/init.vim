@@ -349,7 +349,7 @@ Plug 'tpope/vim-surround' " Surround with brackets,...
 Plug 'kreskij/Repeatable.vim', { 'on': 'Repeatable' } " Put Repeatable before mapping to make it repeatable.
 Plug 'sedm0784/vim-you-autocorrect' " Autocorrect words as we type, it would make English better.
 Plug 'ron89/thesaurus_query.vim' " Thesaurus dictionary for vim
-" Plug 'jalvesaq/zotcite'
+Plug 'jalvesaq/zotcite'
 Plug 'romainl/vim-qf' " Quickfix window control
 Plug 'vim-scripts/Rename2' " Rename the file
 Plug 'mbbill/undotree' "Undotree
@@ -391,7 +391,7 @@ Plug 'mzlogin/vim-markdown-toc'
 Plug 'vimwiki/vimwiki'
 " Plug 'michal-h21/vim-zettel'
 Plug 'mattn/calendar-vim'
-" Plug 'yazgoo/yank-history'
+Plug 'yazgoo/yank-history'
 Plug 'tibabit/vim-templates'
 " Plug 'masukomi/vim-markdown-folding'
 Plug 'preservim/tagbar'
@@ -650,7 +650,7 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown'
 let g:vimwiki_list = [{'path': '~/MEGA/', 'syntax': 'markdown', 'ext': '.md', 'auto_generate_tags': 1, 'index': 'mega_index', 'name': 'Mega Wiki'}]
 
 " This is to get back the C-I in jumping list
-" nmap <F21> <Plug>VimwikiNextLink
+nmap <F21> <Plug>VimwikiNextLink
 nnoremap <Leader>rt :VimwikiRebuildTags<CR>
 nnoremap <Leader>gt :VimwikiRebuildTags<CR>:VimwikiGenerateTagLinks<CR>
 " Better to use ripgrep/fzf search rather than vimwiki search which is quite
@@ -1501,4 +1501,3 @@ nnoremap <Leader>st <plug>(wiki-fzf-tags)
 nnoremap <Leader>sc <plug>(wiki-fzf-toc)
 nnoremap <Leader>sp <plug>(wiki-fzf-page)
 "}}}
-"
