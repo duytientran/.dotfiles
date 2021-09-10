@@ -393,6 +393,7 @@ Plug 'vimwiki/vimwiki'
 Plug 'mattn/calendar-vim'
 Plug 'yazgoo/yank-history'
 Plug 'tibabit/vim-templates'
+" Plug 'michal-h21/vimwiki-sync'
 " Plug 'masukomi/vim-markdown-folding'
 Plug 'preservim/tagbar'
 "--------Language packs------
@@ -510,16 +511,16 @@ xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 " imap <c-f><c-w> <plug>(fzf-complete-word)
 " imap <c-f><c-f> <plug>(fzf-complete-file)
-imap <c-x><c-p> <plug>(fzf-complete-path)
-imap <c-x><c-l> <plug>(fzf-complete-buffer-line)
+imap <c-f><c-p> <plug>(fzf-complete-path)
+imap <c-f><c-l> <plug>(fzf-complete-buffer-line)
 " imap <c-f><c-k> <plug>(fzf-complete-line)
 " inoremap <expr> <c-f><c-f> fzf#vim#complete#path('fd')
 " Path completion with custom source command
-inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files')
+inoremap <expr> <c-f><c-f> fzf#vim#complete#path('rg --files')
 " " Word completion with custom spec with popup layout option
-inoremap <expr> <c-x><c-w> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
+inoremap <expr> <c-f><c-w> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
 " Global line completion (not just open buffers. ripgrep required.)
-inoremap <expr> <c-x><c-k> fzf#vim#complete(fzf#wrap({
+inoremap <expr> <c-f><c-k> fzf#vim#complete(fzf#wrap({
   \ 'prefix': '^.*$',
   \ 'source': 'rg -n ^ --color always',
   \ 'options': '--ansi --delimiter : --nth 3..',
