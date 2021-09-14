@@ -324,8 +324,8 @@ imap <c-v> <c-o>"+p
 imap <c-z> <c-o>g-
 " imap <c-p> <up>
 " imap <c-n> <down>
-imap <c-b> <left>
-imap <c-f> <right>
+" imap <c-b> <left>
+" imap <c-f> <right>
 " imap <c-k> <c-o>d$
 " imap <c-j> <c-o>d$
 " imap <c-e> <c-o>A<c-o>:nohlsearch<cr> cannot map due to default behavior
@@ -517,8 +517,9 @@ imap <c-f><c-l> <plug>(fzf-complete-buffer-line)
 " inoremap <expr> <c-f><c-f> fzf#vim#complete#path('fd')
 " Path completion with custom source command
 inoremap <expr> <c-f><c-f> fzf#vim#complete#path('rg --files')
-" " Word completion with custom spec with popup layout option
-inoremap <expr> <c-f><c-w> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
+" Word completion with custom spec with popup layout option
+" inoremap <expr> <c-f><c-w> fzf#vim#complete#word({'window': { 'width': 0.5, 'height': 0.9, 'xoffset': 1 }})
+" inoremap <expr> <F1> fzf#vim#complete({'source': map(complete_info().items, "v:val.word")})
 " Global line completion (not just open buffers. ripgrep required.)
 inoremap <expr> <c-f><c-k> fzf#vim#complete(fzf#wrap({
   \ 'prefix': '^.*$',
