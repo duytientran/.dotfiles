@@ -86,7 +86,7 @@ set wrap                      "Don’t wrap lines.
 set breakindent
 set showbreak=
 "set formatoptions+=a
-set textwidth=80
+set textwidth=100
 "}}}
 
 "{{{Search configuration
@@ -305,7 +305,7 @@ endfun
 "
 " If the abbreviation is not recognized - use ;; to trigger to prompt for the
 " required expansion.
-iabbrev <expr> ;; <SID>InputAbbrev(2)
+iabbrev <expr> ;;; <SID>InputAbbrev(2)
 
 if filereadable(expand(g:abbrevlist_filename))
   " Load the file if it exists
@@ -391,7 +391,7 @@ Plug 'mzlogin/vim-markdown-toc'
 Plug 'vimwiki/vimwiki'
 " Plug 'michal-h21/vim-zettel'
 Plug 'mattn/calendar-vim'
-Plug 'yazgoo/yank-history'
+" Plug 'yazgoo/yank-history'
 Plug 'tibabit/vim-templates'
 " Plug 'michal-h21/vimwiki-sync'
 " Plug 'masukomi/vim-markdown-folding'

@@ -95,3 +95,5 @@ twimcc to whom it may concern,
 
 ref reference
 doc document
+cm command
+var variable
